@@ -440,7 +440,11 @@ form button:hover{background:#e0b864}
       <p>Tell me a little about your organisation and what's happening in the team. I'll reply personally to arrange a first conversation.</p>
       <p>Or email <a class="mail" href="mailto:hello@phillvalkova.com">hello@phillvalkova.com</a></p>
     </div>
-    <form onsubmit="event.preventDefault();this.querySelector('button').textContent='Thank you, message received';">
+    <form id="contact-form" action="https://formsubmit.co/vylkova_philimena@abv.bg" method="POST">
+      <input type="hidden" name="_subject" value="New message from phillvalkova.com">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
       <label>Name *<input name="name" required autocomplete="name"></label>
       <label>Organisation<input name="organisation" autocomplete="organization"></label>
       <label class="full">Email *<input name="email" type="email" required autocomplete="email"></label>
@@ -474,5 +478,16 @@ form button:hover{background:#e0b864}
     });
   });
 })();
+</script>
+<script>
+document.getElementById('contact-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  var f=this,b=f.querySelector('button');
+  b.disabled=true;b.textContent='Sending...';
+  fetch('https://formsubmit.co/ajax/vylkova_philimena@abv.bg',{method:'POST',headers:{'Accept':'application/json'},body:new FormData(f)})
+    .then(function(r){return r.json()})
+    .then(function(d){if(String(d.success)!=='true')throw 0;f.reset();b.textContent='Thank you, message received';})
+    .catch(function(){b.disabled=false;b.textContent='Send';alert('Sorry, something went wrong. Please email hello@phillvalkova.com instead.');});
+});
 </script>
 </body></html>
